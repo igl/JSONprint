@@ -9,12 +9,15 @@ Print pretty objects. wif colours!1
 
 	var obj = {
 		  foo: true
-		, bar: 1000
-		, baz: [1, true, 'three']
+		, bar: /meh/igm
+		, baz: {
+			qaz: [1, true, 'three']
 		}
 	};
 
 	console.log( printJSON(obj) );
+	
+![screenshot](http://igl.s3-eu-west-1.amazonaws.com/images/printJSON_sample.png)
 
 ###or directly to the stdout:
 	printJSON.log(obj);

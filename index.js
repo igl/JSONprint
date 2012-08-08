@@ -16,7 +16,7 @@ var cfg = {
 	,'quoteKeys': true
 	,'colors': true
 	,'collapseArray': true
-	,'commaFirst': false
+	,'commaFirst': true
 };
 
 exports = module.exports = function printJSON(obj) {
@@ -55,9 +55,9 @@ exports = module.exports = function printJSON(obj) {
 			}
 			if (typeof o[k] === 'object') {
 				if (o[k] instanceof RegExp) {
-					if (cfg.colors) res += col.cyan[0];
+					if (cfg.colors) res += col.red[0];
 					res += o[k]
-					if (cfg.colors) res += col.cyan[1];
+					if (cfg.colors) res += col.red[1];
 				} else {
 					reiterate( o[k] );
 				}
@@ -97,7 +97,8 @@ exports = module.exports = function printJSON(obj) {
 exports.config = function(obj) {
 	var k;
 	for (k in obj) {
-		cfg[k] = obj[k];
+		if (cfg.hasOwnProperty(k))
+			cfg[k] = obj[k];
 	}
 	return cfg;
 };

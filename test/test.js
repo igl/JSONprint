@@ -2,16 +2,12 @@
 
 var printJSON = require('../index')
 
-var testy = {
+var obj = {
 	  foo: true
-	, bar: 1000
+	, bar: /meh/igm
 	, baz: {
-		  'myArr': [1,2,'three']
-		, 'even-deeper': {
-			'blah': /blub/igm
-		}
+		qaz: [1, true, 'three']
 	}
 };
 
-printJSON.log(testy);
-
+console.log( printJSON(obj) );
