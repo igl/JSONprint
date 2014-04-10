@@ -1,9 +1,10 @@
 'use strict'
-require! 'expect.js'; should = it
+require! 'expect.js';
+should = it # ls 'it' keyword quick-fix
 
 describe 'prettyJSON strings' !->
 
-    printJSON = require '../release'
+    printJSON = require '../'
 
     should 'require correctly' !->
         expect printJSON           .to.be.a Function
@@ -11,6 +12,7 @@ describe 'prettyJSON strings' !->
         expect printJSON.log       .to.be.a Function
 
     should 'print all primitive types' !->
+
         # note: regular expression options (/igm) after compile will always be written in the order: /gim
         expect printJSON {
             bool: true
@@ -35,6 +37,7 @@ describe 'prettyJSON strings' !->
         """
 
     should 'print a complex tree' !->
+
         expect printJSON {
             root: {
                 "level-1": [ { a: 1 }, { b: 2 }, { c: { "three": { "four": [1 2 3] } } } ]

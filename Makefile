@@ -1,5 +1,7 @@
+#
+# check for windows
+# we are using msys and gnu-make fails if not run in cmd.exe
 
-# check windows 7
 ifeq ($(OS), Windows_NT)
 	SHELL=C:\Windows\SysWOW64\cmd.exe
 endif
@@ -7,28 +9,27 @@ endif
 LSC         = "./node_modules/.bin/lsc"
 LSC_FLAGS   = --compile --bare --output
 MOCHA       = "./node_modules/.bin/mocha"
-MOCHA_FLAGS = --colors --check-leaks --timeout 10000 --reporter spec --require expect.js --recursive
+MOCHA_FLAGS = --timeout 10000 --reporter spec --recursive --colors --check-leaks
 
-run: clean build test
-	node release/
-
-release: clean build test
-	tar -cvzf printJSON.tgz release
+default: build test
 
 build: clean
-	mkdir "release/lib"
-	mkdir "release/specs"
+	mkdir release
 	${LSC} ${LSC_FLAGS} release source
+
+test:
 	${LSC} ${LSC_FLAGS} specs specs
-
-
-test: clean build
 	${MOCHA} ${MOCHA_FLAGS} specs
+# delete compiled test-source after successful run
+# source stays if test fails
 	rm -rf specs/*.js
 
+install:
+	npm install
+	make build
 
 clean:
 	rm -rf release
 	rm -rf specs/*.js
 
-.PHONY: release build test clean run
+.PHONY: default build test install clean

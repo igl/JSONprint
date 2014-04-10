@@ -1,13 +1,11 @@
 {
-  "name": "printJSON",
-  "description": "print pretty json strings (+colors, html)",
+  "name": "JSONPrinter",
+  "description": "print pretty json strings (+colors)",
   "version": "0.0.3",
-  "private": true,
-  "main": "release/lib",
-  "dependencies": {
-    "LiveScript": "^1.2.0"
-  },
+  "main": "./release/JSONPrinter.js",
+  "dependencies": {},
   "devDependencies": {
+    "LiveScript": "^1.2.0",
     "expect.js": "^0.3.1",
     "mocha": "^1.18.2"
   }
