@@ -1,7 +1,7 @@
 {
   "name": "printJSON",
   "description": "print pretty json strings (+colors, html)",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": true,
   "main": "release/lib",
   "dependencies": {

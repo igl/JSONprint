@@ -1,16 +1,8 @@
-# Compiled source #
-###################
-*.com
-*.class
-*.dll
-*.exe
-*.o
-*.so
-*.pid
+node_modules/
+rel/
+PSD/
 
-# Packages #
-############
-node_modules
+.idea
 *.7z
 *.dmg
 *.gz
@@ -19,15 +11,22 @@ node_modules
 *.rar
 *.tar
 *.zip
+*.iml
+*.hidden
 
-# Logs and databases #
-######################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pid
+
 *.log
 *.sql
 *.sqlite
 
-# OS generated files #
-######################
+npm-debug.log
 .DS_Store*
 ehthumbs.db
 Icon?

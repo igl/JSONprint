@@ -46,45 +46,50 @@ JSONPrinter = function(options){
       input = JSON.parse(input);
     }
     result = '';
-    depth = 1;
+    depth = 0;
     iterate = function(obj){
-      var tab, i, len, isArrayItem, writeDepth, k, val, ref$;
-      tab = '';
+      var tabN, tabP, i, len, isAfterObject, isInsideArray, isArrayObject, writeDepth, k, val, ref$, isLeavingArray;
+      tabN = '';
+      tabP = '';
       i = 0;
       len = 0;
-      isArrayItem = isArray(obj);
-      result += isArrayItem ? '[' : '{';
+      isAfterObject = result[result.length - 2] === '}';
+      isInsideArray = result[result.length - 1] === '[';
+      isArrayObject = isArray(obj);
       writeDepth = ++depth;
-      while (--writeDepth) {
-        tab += opts.indent;
+      while (writeDepth--) {
+        tabN += opts.indent;
       }
+      tabP = tabN.replace(opts.indent, '');
+      if (isInsideArray || isAfterObject) {
+        result += '\n' + tabP;
+      }
+      result += isArrayObject ? '[' : '{';
       for (k in obj) {
         val = obj[k];
         if (opts.commaFirst) {
-          result += isArrayItem && opts.collapseArray
-            ? ''
-            : '\n' + tab;
+          if (!isArrayObject && opts.collapseArray) {
+            result += '\n' + tabN;
+          }
           if (len > 0) {
-            result += ', ';
+            result += ',';
           }
         } else {
           if (len > 0) {
-            result += ', ';
+            result += ',';
           }
-          if (!isArrayItem && opts.collapseArray) {
-            result += '\n' + tab;
+          if (!isArrayObject && opts.collapseArray) {
+            result += '\n' + tabN;
           }
         }
         len += 1;
-        if (!isArrayItem) {
-          if (opts.quoteKeys) {
-            result += opts.quote + k + opts.quote + ': ';
-          } else {
-            result += k + ': ';
-          }
+        if (!isArrayObject) {
+          result += opts.quoteKeys
+            ? opts.quote + k + opts.quote + ': '
+            : k + ': ';
         }
         switch (ref$ = [toString$.call(val).slice(8, -1)], false) {
-        case 'Object' !== ref$[0]:
+        case !('Object' === ref$[0] || 'Array' === ref$[0]):
           iterate(val);
           break;
         case 'RegExp' !== ref$[0]:
@@ -124,10 +129,14 @@ JSONPrinter = function(options){
           }
         }
       }
-      if (!isArrayItem || (isArrayItem && !opts.collapseArray)) {
-        result += '\n' + tab.replace(opts.indent, '');
+      if (!isArrayObject || (isArrayObject && !opts.collapseArray)) {
+        result += '\n' + tabP;
       }
-      result += isArrayItem ? ']' : '}';
+      isLeavingArray = result[result.length - 1] === '}' && isArrayObject;
+      if (isLeavingArray) {
+        result += '\n' + tabP;
+      }
+      result += isArrayObject ? ']' : '}';
       depth -= 1;
       return result;
     };

@@ -11,17 +11,52 @@ describe 'prettyJSON strings' !->
         expect printJSON.log       .to.be.a Function
 
     should 'print all primitive types' !->
-
-        result = printJSON {
-            foo: true
+        # note: regular expression options (/igm) after compile will always be written in the order: /gim
+        expect printJSON {
+            bool: true
+            str: "string1"
+            str2: 'string2'
+            array : [1,2,3]
+            object : { foo: "bar" }
+            num: 948.5
+            rx: /(f[o]+)/gim
+        } .to.be """
+        {
+            "bool": true,
+            "str": "string1",
+            "str2": "string2",
+            "array": [1,2,3],
+            "object": {
+                "foo": "bar"
+            },
+            "num": 948.5,
+            "rx": /(f[o]+)/gim
         }
+        """
 
-        console.log '*'
-        console.log result
-        console.log '*'
-
-        expect result .to.be """
-                        {
-                            "foo": true
-                        }"""
-
+    should 'print a complex tree' !->
+        expect printJSON {
+            root: {
+                "level-1": [ { a: 1 }, { b: 2 }, { c: { "three": { "four": [1 2 3] } } } ]
+            }
+        } .to.be """
+        {
+            "root": {
+                "level-1": [
+                    {
+                        "a": 1
+                    },
+                    {
+                        "b": 2
+                    },
+                    {
+                        "c": {
+                            "three": {
+                                "four": [1,2,3]
+                            }
+                        }
+                    }
+                ]
+            }
+        }
+        """

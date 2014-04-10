@@ -40,37 +40,42 @@ JSONPrinter = (options) ->
         input  := (JSON.parse input) unless isObject input
 
         result = ''
-        depth  = 1
+        depth  = 0
 
         iterate = (obj) ->
-            tab = ''
+            tabN = ''
+            tabP = ''
             i   = 0
             len = 0
-
-            isArrayItem = isArray obj
-            result += if isArrayItem then \[ else \{
-
+            isAfterObject = result[*-2] is \}
+            isInsideArray = result[*-1] is \[
+            isArrayObject = isArray obj
             write-depth = (++depth)
-            while --write-depth => tab += opts.indent
+            while write-depth-- then
+                tabN += opts.indent
+            tabP := tabN.replace opts.indent, ''
+
+            result += (\\n + tabP) if isInsideArray or isAfterObject
+            result += if isArrayObject then \[ else \{
 
             for k, val of obj
                 if opts.commaFirst
-                    result += if isArrayItem and opts.collapseArray then '' else \\n + tab
-                    result += ', ' if len > 0
+                    result += (\\n + tabN) if not isArrayObject and opts.collapseArray
+                    result += ',' if len > 0
                 else
-                    result += ', ' if len > 0
-                    result += (\\n + tab) if not isArrayItem and opts.collapseArray
+                    result += ',' if len > 0
+                    result += (\\n + tabN) if not isArrayObject and opts.collapseArray
 
                 len += 1
 
-                if not isArrayItem
-                    if opts.quoteKeys then
-                        result += opts.quote + k + opts.quote + ': '
-                    else
-                        result += k + ': '
+                unless isArrayObject
+                    result +=
+                        if opts.quoteKeys then
+                            opts.quote + k + opts.quote + ': '
+                        else k + ': '
 
                 match typeof! val
-                when 'Object'
+                when 'Object' or 'Array'
                     iterate val
                 when 'RegExp'
                     result += Colors.red[0] if opts.colors
@@ -91,8 +96,10 @@ JSONPrinter = (options) ->
                     result += val
                     result += Colors.blue[1] if opts.colors
 
-            result += (\\n + tab.replace(opts.indent, '')) if not isArrayItem or (isArrayItem && not opts.collapseArray) # close item
-            result += if isArrayItem then \] else \}  # close level
+            result += (\\n + tabP) if not isArrayObject or (isArrayObject && not opts.collapseArray) # close item
+            isLeavingArray = result[*-1] is \} and isArrayObject
+            result += (\\n + tabP) if isLeavingArray
+            result += if isArrayObject then \] else \}  # close level
             depth -= 1    # traverse out
             return result
         return iterate input
