@@ -78,13 +78,13 @@ JSONPrinter = (options) ->
                 when 'Object' or 'Array'
                     iterate val
                 when 'RegExp'
-                    result += Colors.red[0] if opts.colors
-                    result += val
-                    result += Colors.red[1] if opts.colors
-                when 'Number'
                     result += Colors.yellow[0] if opts.colors
                     result += val
                     result += Colors.yellow[1] if opts.colors
+                when 'Number'
+                    result += Colors.white[0] if opts.colors
+                    result += val
+                    result += Colors.white[1] if opts.colors
 
                 when 'String'
                     result += Colors.green[0] if opts.colors
