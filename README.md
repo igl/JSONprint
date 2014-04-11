@@ -23,7 +23,7 @@ example:
 or directly to the stdout:
     JSONprint.log(obj);
 
-![screenshot](http://igl.s3-eu-west-1.amazonaws.com/images/JSONprint_sample.png)
+![screenshot](http://s3-eu-west-1.amazonaws.com/igl/images/printJSON_sample.png)
 
 ## Options
 
