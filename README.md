@@ -5,45 +5,40 @@ JSONprint
 Print JSON objects pretty. +colours +comma-first +optional-quotes
 written in livescript. build:
 
-    make install
-
-
+    make           => make build test
+    make install   => npm install and make build
 
 example:
 
-    var printJSON = require('printJSON');
+    var JSONprint = require('JSONprint');
 
     var obj = {
-          foo: true
-        , bar: /meh/gim
-        , baz: {
-            qaz: [1, true, 'three']
-        }
+        foo: true,
+        bar: /meh/gim,
+        baz: { qaz: [1, true, 'three'] }
     };
 
-    console.log( printJSON(obj) );
+    console.log( JSONprint(obj) );
 
 or directly to the stdout:
-    printJSON.log(obj);
+    JSONprint.log(obj);
 
+![screenshot](http://igl.s3-eu-west-1.amazonaws.com/images/JSONprint_sample.png)
 
-![screenshot](http://igl.s3-eu-west-1.amazonaws.com/images/printJSON_sample.png)
+## Options
 
+JSONprint :: String | Object -> Object? -> String
 
-## options
-
-printJSON(obj, options)
-
-default values:
-
-    options = {
-         'quote': '"' // Use this char as quote
-        ,'quoteKeys': true // Quote JSON keys
-        ,'colors': false // Klickibunti
-        ,'collapseArray': true // Print arrays in one line
-        ,'commaFirst': false // Put commas infront of the line
+defaults:
+    {
+        quote         : '"'   -- Use this char as quote
+        quoteKeys     : true  -- Quote JSON keys
+        collapseArray : true  -- Print arrays in one line
+        colors        : false -- Klickibunti
+        commaFirst    : false -- place commas after \n
     }
 
 ### WIP:
+* new lexer
 * deeper tests
 * html output

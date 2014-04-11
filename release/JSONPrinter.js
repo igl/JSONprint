@@ -94,20 +94,20 @@ JSONPrinter = function(options){
           break;
         case 'RegExp' !== ref$[0]:
           if (opts.colors) {
-            result += Colors.red[0];
-          }
-          result += val;
-          if (opts.colors) {
-            result += Colors.red[1];
-          }
-          break;
-        case 'Number' !== ref$[0]:
-          if (opts.colors) {
             result += Colors.yellow[0];
           }
           result += val;
           if (opts.colors) {
             result += Colors.yellow[1];
+          }
+          break;
+        case 'Number' !== ref$[0]:
+          if (opts.colors) {
+            result += Colors.white[0];
+          }
+          result += val;
+          if (opts.colors) {
+            result += Colors.white[1];
           }
           break;
         case 'String' !== ref$[0]:
