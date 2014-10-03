@@ -1,5 +1,5 @@
 {
-  "name": "JSONPrinter",
+  "name": "json-print",
   "description": "print pretty json strings (+colors)",
   "version": "0.0.4",
   "author": "Richard Keil",
