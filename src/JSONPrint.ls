@@ -25,6 +25,12 @@ const Default-Options =
     commaFirst    : false
 
 # helper
+_hasOwnProperty = Object.prototype.hasOwnProperty
+_toString       = Object.prototype.toString
+
+isType = (t, o) ->
+    t is (_toString.call o .slice 8, -1)
+
 isString = -> typeof! it == \String
 isObject = -> typeof! it == \Object
 isArray  = -> typeof! it == \Array
@@ -35,9 +41,14 @@ JSONPrinter = (options) ->
 
     # print :: [Any] -> Object -> String
     print = (input, opts) ->
-        opts   := {} unless isObject opts
+        opts   := {} unless isType 'Object' opts
         opts   := (defaults <<< opts)
-        input  := (JSON.parse input) unless isObject input
+        try
+            input  := (JSON.parse input)
+        catch
+            err = new Error 'Failed to parse object: ' + e.message
+            err.stack = e.stack
+            throw err
 
         result = ''
         depth  = 0

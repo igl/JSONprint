@@ -1,35 +1,43 @@
-#
-# check for windows
-# we are using msys and gnu-make fails if not run in cmd.exe
-
+# OS Specific
+# set default shell to cmd.exe, fixing git-shell issues with gnu-make.
 ifeq ($(OS), Windows_NT)
-	SHELL=C:\Windows\SysWOW64\cmd.exe
+	SHELL = C:\Windows\SysWOW64\cmd.exe
 endif
 
-LSC         = "./node_modules/.bin/lsc"
-LSC_FLAGS   = --compile --bare --output
-MOCHA       = "./node_modules/.bin/mocha"
-MOCHA_FLAGS = --timeout 10000 --reporter spec --recursive --colors --check-leaks
+LS     = node_modules/LiveScript
+LSC    = node_modules/".bin"/lsc
+MOCHA  = node_modules/".bin"/mocha
+BRSIFY = node_modules/".bin"/browserify
+UGLIFY = node_modules/'.bin'/uglifyjs
+MKDIRP = node_modules/".bin"/mkdirp
 
-default: build test
+SRC  = $(shell find src -maxdepth 1 -name "*.ls" -type f | sort)
+DIST = dist $(SRC:src/%.ls=dist/%.js)
+BREL = browser browser/JSONPrint.js browser/JSONPrint.min.js
 
-build: clean
-	mkdir release
-	${LSC} ${LSC_FLAGS} release source
-
-test:
-	${LSC} ${LSC_FLAGS} specs specs
-	${MOCHA} ${MOCHA_FLAGS} specs
-# delete compiled test-source after successful run
-# source stays if test fails
-	rm -rf specs/*.js
+build: $(DIST) $(BREL)
 
 install:
-	npm install
-	make build
+	@npm install .
+
+test: build
+	@$(MOCHA) tests -u tdd -R spec -t 5000 --compilers ls:$(LS) -r "./test-runner.js" -c -S -b --recursive --check-leaks --inline-diffs
 
 clean:
-	rm -rf release
-	rm -rf specs/*.js
+	@rm -rf dist
+	@rm -rf browser
+	@sleep .1 # wait for editor to refresh the file tree.......
 
-.PHONY: default build test install clean
+.PHONY: build install test clean
+
+%:
+	@$(MKDIRP) $@
+
+dist/%.js: src/%.ls
+	$(LSC) --bare -o "$(shell dirname $@)" -c "$<"
+
+browser/%.js: dist/%.js
+	$(BRSIFY) -r "./$<:JSONPrint" > "$@"
+
+browser/%.min.js: browser/%.js
+	$(UGLIFY) "./$<" --mangle --comments "none" > "$@"
