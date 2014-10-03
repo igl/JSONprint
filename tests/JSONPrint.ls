@@ -1,18 +1,18 @@
 'use strict'
 
-suite 'prettyJSON strings' !->
+suite 'JSONPrint' !->
 
-    printJSON = require '../'
+    JSONPrint = require '../'
 
-    test 'require correctly' !->
-        expect printJSON           .to.be.a Function
-        expect printJSON.configure .to.be.a Function
-        expect printJSON.log       .to.be.a Function
+    test 'exports correctly' !->
+        expect JSONPrint           .to.be.a Function
+        expect JSONPrint.configure .to.be.a Function
+        expect JSONPrint.log       .to.be.a Function
 
     test 'print all primitive types' !->
 
         # note: regular expression options (/igm) after compile will always be written in the order: /gim
-        expect printJSON {
+        expect JSONPrint {
             bool: true
             str: "string1"
             str2: 'string2'
@@ -36,7 +36,7 @@ suite 'prettyJSON strings' !->
 
     test 'print a complex tree' !->
 
-        expect printJSON {
+        expect JSONPrint {
             root: {
                 "level-1": [ { a: 1 }, { b: 2 }, { c: { "three": { "four": [1 2 3] } } } ]
             }
