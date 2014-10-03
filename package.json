@@ -1,9 +1,9 @@
 {
   "name": "json-print",
   "description": "print pretty json strings (+colors)",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": "Richard Keil",
-  "main": "dist/JSONPrinter.js",
+  "main": "dist/JSONPrint.js",
   "dependencies": {},
   "devDependencies": {
     "LiveScript": "^1.2.0",
