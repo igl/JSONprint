@@ -31,10 +31,6 @@ _toString       = Object.prototype.toString
 isType = (t, o) ->
     t is (_toString.call o .slice 8, -1)
 
-isString = -> typeof! it == \String
-isObject = -> typeof! it == \Object
-isArray  = -> typeof! it == \Array
-
 # printer class
 JSONPrinter = (options) ->
     defaults = Default-Options <<< options
@@ -85,7 +81,7 @@ JSONPrinter = (options) ->
                             opts.quote + k + opts.quote + ': '
                         else k + ': '
 
-                match typeof! val
+                match _toString.call val .slice 8, -1
                 when 'Object' or 'Array'
                     iterate val
                 when 'RegExp'
