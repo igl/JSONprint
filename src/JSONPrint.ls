@@ -26,10 +26,6 @@ const Default-Options =
 
 # helper
 _hasOwnProperty = Object.prototype.hasOwnProperty
-_toString       = Object.prototype.toString
-
-isType = (t, o) ->
-    t is (_toString.call o .slice 8, -1)
 
 # printer class
 JSONPrinter = (options) ->
@@ -37,12 +33,12 @@ JSONPrinter = (options) ->
 
     # print :: [Any] -> Object -> String
     print = (input, opts) ->
-        opts   := {} unless isType 'Object' opts
+        opts   := {} unless typeof! opts is 'Object'
         opts   := (defaults <<< opts)
         try
-            input  := (JSON.parse input)
+            input := (JSON.parse input)
         catch
-            err = new Error 'Failed to parse object: ' + e.message
+            err = new Error "Failed to parse object: #{e.message}"
             err.stack = e.stack
             throw err
 
@@ -81,8 +77,8 @@ JSONPrinter = (options) ->
                             opts.quote + k + opts.quote + ': '
                         else k + ': '
 
-                match _toString.call val .slice 8, -1
-                when 'Object' or 'Array'
+                switch typeof! val
+                when 'Object', 'Array'
                     iterate val
                 when 'RegExp'
                     result += Colors.yellow[0] if opts.colors
@@ -114,8 +110,7 @@ JSONPrinter = (options) ->
     # set default options for session
     # configure :: String -> Object -> String
     print.configure = (conf) ->
-        for key, value of conf when defaults.hasOwnProperty key
-            defaults[key] = value
+        defaults <<< conf
         this
 
     # show result in console.log
